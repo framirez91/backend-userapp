@@ -16,7 +16,7 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (username.equals("admin")) {
+        if (!username.equals("admin")) {
             throw new UsernameNotFoundException(String.format("%s no fue encontrado",username));
         }
        List<GrantedAuthority> authorities = new ArrayList<>();
@@ -24,7 +24,7 @@ public class JpaUserDetailsService implements UserDetailsService {
 
         return new User
         (username,
-        "1234",
+        "$2a$10$DOMDxjYyfZ/e7RcBfUpzqeaCs8pLgcizuiQWXPkU35nOhZlFcE9MS",
         true,
         true,
         true,
