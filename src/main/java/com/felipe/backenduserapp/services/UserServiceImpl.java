@@ -1,7 +1,10 @@
 package com.felipe.backenduserapp.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.felipe.backenduserapp.models.entities.Role;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.felipe.backenduserapp.models.entities.User;
 import com.felipe.backenduserapp.models.request.UserRequest;
+import com.felipe.backenduserapp.repositories.RoleRepository;
 import com.felipe.backenduserapp.repositories.UserRepository;
 
 
@@ -17,11 +21,13 @@ import com.felipe.backenduserapp.repositories.UserRepository;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
- 
-    @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
@@ -34,11 +40,20 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findById(Long id) {
         return repository.findById(id);
     }
+
     @Override
     @Transactional
     public User save(User user) {
-        String passwordBc = passwordEncoder.encode(user.getPassword());
-        user.setPassword(passwordBc);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        Optional<Role> o = roleRepository.findByName("ROLE_USER");
+        
+        List<Role> roles = new ArrayList<>();
+        if (o.isPresent()) {
+            roles.add(o.orElseThrow());
+        }
+        user.setRoles(roles);
+
         return repository.save(user);
     }
 
@@ -61,6 +76,5 @@ public class UserServiceImpl implements UserService {
     public void remove(Long id) {
         repository.deleteById(id);
     }
-
     
 }

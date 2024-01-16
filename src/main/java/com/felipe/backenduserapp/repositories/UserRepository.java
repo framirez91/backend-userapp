@@ -9,10 +9,8 @@ import com.felipe.backenduserapp.models.entities.User;
 public interface UserRepository
         extends CrudRepository<User, Long> {
 
-                Optional<User> findByUsername(String username);
-                
-                @Query("SELECT u FROM User u WHERE u.username = ?1")//sirve para hacer consultas personalizadas ?1 es el primer parametro
-                Optional<User> getUserByUsername(String username);
+        Optional<User> findByUsername(String username);
 
-
+        @Query("select u from User u where u.username=?1")
+        Optional<User> getUserByUsername(String username);
 }

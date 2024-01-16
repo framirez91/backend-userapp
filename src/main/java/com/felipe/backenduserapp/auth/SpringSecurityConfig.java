@@ -15,36 +15,33 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.felipe.backenduserapp.auth.filters.JwtAuthenticationFilter;
 import com.felipe.backenduserapp.auth.filters.JwtValidationFilter;
-
 @Configuration
 public class SpringSecurityConfig {
-     
+
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
-    PasswordEncoder passwordEncoder(){
-      return new BCryptPasswordEncoder();
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
+    
     @Bean
     AuthenticationManager authenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-
-
-
-    //filtro de seguridad
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests()
-        .requestMatchers(HttpMethod.GET,"/users").permitAll()
-        .anyRequest().authenticated() 
-        .and()
-        .addFilter(new JwtAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
-        .addFilterAfter(new JwtValidationFilter(authenticationConfiguration.getAuthenticationManager()),JwtAuthenticationFilter.class)
-        .csrf(config -> config.disable())
-        .sessionManagement(managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .build();
+                .requestMatchers(HttpMethod.GET, "/users").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
+                .addFilter(new JwtValidationFilter(authenticationConfiguration.getAuthenticationManager()))
+                .csrf(config -> config.disable())
+                .sessionManagement(managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .build();
+
     }
 }
