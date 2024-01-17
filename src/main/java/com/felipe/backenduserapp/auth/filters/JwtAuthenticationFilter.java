@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.felipe.backenduserapp.models.entities.User;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ClaimsBuilder;
+
 import io.jsonwebtoken.Jwts;
 
 import static com.felipe.backenduserapp.auth.TokenJwtConfig.*;
@@ -74,9 +74,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
         boolean isAdmin = roles.stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
-        Claims claims = Jwts.claims(null);
+        Claims claims = Jwts.claims();
         claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
         claims.put("isAdmin", isAdmin);
+        claims.put("username", username);
 
         String token = Jwts.builder()
                 .setClaims(claims)

@@ -5,10 +5,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
-import org.springframework.boot.autoconfigure.task.TaskExecutionProperties.Simple;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -55,7 +54,7 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
 
         try {
 
-            Claims claims = Jwts.parser()
+            Claims claims = Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY)
                     .build()
                     .parseClaimsJws(token)
