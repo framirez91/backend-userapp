@@ -4,7 +4,7 @@ package com.felipe.backenduserapp.models.entities;
 
 import java.util.List;
 
-
+import com.felipe.backenduserapp.models.IUser;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +24,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="users")
-public class User {
+public class User implements IUser {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,7 +93,8 @@ public class User {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
-
+ 
+    @Override
     public boolean isAdmin() {
         return admin;
     }
